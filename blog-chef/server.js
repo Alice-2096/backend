@@ -10,6 +10,8 @@ const app = express();
 
 //express middleware: mounting the middleware on the /assets route 
 app.use("/assets", express.static(join(__dirname, "public")));
+//configure the template engine by setting the 'view engine' property to the engine name  
+app.set('view engine', 'pug'); 
 
 app.listen(3000, () => console.log('express started on http://localhost:3000; press ctrl-c to terminate.')); 
 
@@ -20,12 +22,28 @@ app.get('/', function(req, res){
 });
 
 app
-    .get('/admin/login', (req, res) => {
-        res.sendFile(join(__dirname, "views", "login.html")); 
-    })
+    // .get('/admin/login', (req, res) => {
+    //     res.sendFile(join(__dirname, "views", "login.html")); 
+    // })
+    .get('/admin/login', (req, res) => res.render("login"))
+    //Express by default expects the template to reside in the views folder
     .post("/admin/login", (req, res) => {
         res.send("handle login here."); 
     });
+
+//serving server-generated content to the user 
+app.get('/admin/dashboard', (req, res) => 
+    res.render('dashboard', {
+        // property-value pair -- representing the data to be injected to the pug template
+        user: "Joe Doe", 
+        
+    })
+);
+
+
+
+//redirect the user to the /admin/login page when they log out 
+app.get('/admin/logout', (req,res) => res.redirect('/admin/login')); 
 
 // post handlers for POST requests
 // POST request must comes with some request payload 

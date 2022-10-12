@@ -1,0 +1,11 @@
+html   
+ B    head    
+        link(rel="stylesheet" href="/assets/style.css")
+        title Blogchef - Dashboard 
+    body    
+        .container  
+            h1#admin-title Blogchef - Dashboard 
+            #admin-nav 
+                h3#user-name= "Welcome, " + user
+                a(href="/admin/logout" id="LogOutBtn") Logout 
+
