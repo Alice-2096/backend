@@ -1,3 +1,3 @@
 # backend
 
-KnowledgeHut Bootcamp -- Building Backend app with Node.js, Express, and MongoDB 
+KnowledgeHut Bootcamp -- Building Backend apps with Node.js, Express, and MongoDB 
