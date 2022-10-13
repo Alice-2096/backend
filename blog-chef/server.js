@@ -8,10 +8,15 @@ const __dirname = dirname(__filename);
 
 const app = express(); 
 
+//add request parsing to the application, 
+// this function acts on all requests from all routes 
+app.use(express.urlencoded({ extended: false})); 
+app.use(express.json()); 
 //express middleware: mounting the middleware on the /assets route 
 app.use("/assets", express.static(join(__dirname, "public")));
 //configure the template engine by setting the 'view engine' property to the engine name  
 app.set('view engine', 'pug'); 
+
 
 app.listen(3000, () => console.log('express started on http://localhost:3000; press ctrl-c to terminate.')); 
 
@@ -28,7 +33,10 @@ app
     .get('/admin/login', (req, res) => res.render("login"))
     //Express by default expects the template to reside in the views folder
     .post("/admin/login", (req, res) => {
-        res.send("handle login here."); 
+        const { email, password } = req.body; 
+        console.log("Email: ", email);
+        console.log("Password: ", password); 
+        res.redirect("/admin/dashboard"); 
     });
 
 //serving server-generated content to the user 
@@ -58,8 +66,16 @@ app.get('/admin/dashboard', (req, res) =>
 app.get('/admin/logout', (req,res) => res.redirect('/admin/login')); 
 
 // post handlers for POST requests
-// POST request must comes with some request payload
+// POST request must comes with some request payload -- for example, user data or information to be updated 
+// need to parse and extract data from the request for processing (e.g., authentication)
 app.post('/admin/approve', (req, res) => res.redirect('/admin/dashboard')); 
+
+app.post('/api/posts', (req, res) => {
+    console.log(req.body); 
+    res.json({ message: "Got it!"}); 
+}); 
+
+
 
 
 app.post("/palindrome", (req, res) => {
