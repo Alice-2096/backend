@@ -34,9 +34,21 @@ app
 //serving server-generated content to the user 
 app.get('/admin/dashboard', (req, res) => 
     res.render('dashboard', {
-        // property-value pair -- representing the data to be injected to the pug template
+        // can pass object as the second argument 
+        //property-value pair -- representing the data to be injected to the pug template
         user: "Joe Doe", 
-        
+        posts: [{
+            id: 1, 
+            author: "Joe D", 
+            title: "Trying out Express", 
+            content: "Express is a wonderful tool for building node.js app.", 
+        }, 
+        {
+            id: 2, 
+            author: "Mike M", 
+            title: "Have you tried Pug?", 
+            content: "Pug is new fav tool.", 
+        }]
     })
 );
 
@@ -46,7 +58,10 @@ app.get('/admin/dashboard', (req, res) =>
 app.get('/admin/logout', (req,res) => res.redirect('/admin/login')); 
 
 // post handlers for POST requests
-// POST request must comes with some request payload 
+// POST request must comes with some request payload
+app.post('/admin/approve', (req, res) => res.redirect('/admin/dashboard')); 
+
+
 app.post("/palindrome", (req, res) => {
     let body = "";
     // creating a DATA and an END event 
