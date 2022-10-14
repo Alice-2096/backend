@@ -1,14 +1,19 @@
 import express from "express"; 
+import compression from "compression"; 
 import { join } from "path"; 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import morgan from "morgan"; 
 import session, { Cookie } from "express-session"; 
+import protectRoute from "./utils/protectRoute.js"; 
 
 const app = express(); 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+//middleware for data compression 
+app.use(compression()); 
 
 // add morgan to log our HTTP requests in the desired format
 app.use(morgan(":method - :url - :date - :response-time ms"));
@@ -52,6 +57,11 @@ app
     // .get('/admin/login', (req, res) => {
     //     res.sendFile(join(__dirname, "views", "login.html")); 
     // })
+    .get('/admin', (req, res) => 
+    req.session.user 
+        ? res.redirect('/admin/dashboard') 
+        : res.redirect('/admin/login')
+    )
     .get('/admin/login', (req, res) => res.render("login"))
     //Express by default expects the template to reside in the views folder
     .post("/admin/login", (req, res) => {
@@ -64,7 +74,7 @@ app
     });
 
 //serving server-generated content to the user 
-app.get('/admin/dashboard', (req, res) => 
+app.get('/admin/dashboard', protectRoute("/admin/login"), (req, res) => 
     res.render('dashboard', {
         // can pass object as the second argument 
         //property-value pair -- representing the data to be injected to the pug template
